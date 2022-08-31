@@ -29,6 +29,7 @@ uint8_t primaryAccountNumber[20];
 
 ST_accountsDB_t accounts[255];
 ST_transaction_t transactions[255];
+ST_transaction_t* transactions_stack = NULL;
 
 EN_transState_t recieveTransactionData(ST_transaction_t *transData);
 EN_serverError_t isValidAccount(ST_cardData_t *cardData);

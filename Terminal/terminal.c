@@ -31,10 +31,23 @@ EN_terminalError_t getTransactionDate(ST_terminalData_t *termData) {
     else return WRONG_DATE;
 }
 EN_terminalError_t isCardExpired(ST_cardData_t cardData, ST_terminalData_t termData) {
-    if (cardData.cardExpirationDate == termData.transactionDate) {
-        return OK;
+    int cardDay, cardMonth, cardYear, termDay, termMonth, termYear;
+    sscanf(termData.transactionDate, "%d/%d/%d", &termDay, &termMonth, &termYear);
+    sscanf(cardData.cardExpirationDate, "%d/%d/%d", &cardDay, &cardMonth, &cardYear);
+    if (cardYear >= termYear) {
+        if (cardYear > termYear) {
+            return OK;
+        }
+        else {
+            if (cardMonth >= termMonth) {
+                if (cardYear > termMonth) return OK;
+                else if (cardDay >= termDay) {
+                    return OK;
+                }
+        }
+        }
     }
-    else return WRONG_EXP_DATE;
+    return EXPIRED_CARD;
 }
 
 EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData) {

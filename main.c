@@ -1,4 +1,4 @@
-#include "Application/application.h"
+#include "./Application/application.h"
 
 int main(void){
     /* CONFIG */

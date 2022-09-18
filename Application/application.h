@@ -1,11 +1,13 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "../Card/card.h"
-#include "../Terminal/terminal.h"
-#include "../Server/server.h"
-#include <stdlib.h>
+#pragma once
 
+#define OK_APP 0
+
+#include "../Server/server.h"
+
+void userStory1();
 void appStart(void);
 
 #endif

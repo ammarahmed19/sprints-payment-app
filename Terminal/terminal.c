@@ -2,9 +2,10 @@
 
 
 /* HELPER FUNCTIONS */
-char checkLuhn(char* cardNo)
+
+char checkLuhn(uint8_t* cardNo)
 {
-    int nDigits = strlen(cardNo);
+    int nDigits = sizeof(cardNo);
  
     int nSum = 0, isSecond = 0;
     for (int i = nDigits - 1; i >= 0; i--) {
@@ -21,29 +22,29 @@ char checkLuhn(char* cardNo)
     }
     return (nSum % 10 == 0);
 }
+
  ///////////////////////////
 
 EN_terminalError_t getTransactionDate(ST_terminalData_t *termData) {
     printf("Enter transaction date (DD/MM/YYYY): ");
-    gets(termData->transactionDate);
-    int tdlen = strlen(termData->transactionDate);
-    if (tdlen == 10) return OK;
+    int tdlen = inputString(termData->transactionDate, 6);
+    if (tdlen == 10) {
+        return OK_terminal;
+    }
     else return WRONG_DATE;
 }
 EN_terminalError_t isCardExpired(ST_cardData_t cardData, ST_terminalData_t termData) {
-    int cardDay, cardMonth, cardYear, termDay, termMonth, termYear;
-    sscanf(termData.transactionDate, "%d/%d/%d", &termDay, &termMonth, &termYear);
-    sscanf(cardData.cardExpirationDate, "%d/%d/%d", &cardDay, &cardMonth, &cardYear);
+    int cardMonth, cardYear, termDay, termMonth, termYear;
+    sscanf((void*)termData.transactionDate, "%d/%d/%d", &termDay, &termMonth, &termYear);
+    sscanf((void*)cardData.cardExpirationDate, "%d/%d", &cardMonth, &cardYear);
+    cardYear += 2000; // because cardYear is in YY format
     if (cardYear >= termYear) {
         if (cardYear > termYear) {
-            return OK;
+            return OK_terminal;
         }
         else {
             if (cardMonth >= termMonth) {
-                if (cardYear > termMonth) return OK;
-                else if (cardDay >= termDay) {
-                    return OK;
-                }
+                if (cardYear > termMonth) return OK_terminal;
         }
         }
     }
@@ -51,24 +52,28 @@ EN_terminalError_t isCardExpired(ST_cardData_t cardData, ST_terminalData_t termD
 }
 
 EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData) {
-    if (checkLuhn(cardData->primaryAccountNumber)) return OK;
+    if (checkLuhn(cardData->primaryAccountNumber)) return OK_terminal;
     else return WRONG_PAN;
 }
 
 EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData) {
+    float val;
     printf("Enter Transaction Amount: ");
-    scanf("%f", termData->maxTransAmount);
-    if (termData->maxTransAmount > 0) return OK;
+    scanf("%f", &val);
+    termData->transAmount = val;
+    if (termData->maxTransAmount > 0) return OK_terminal;
     else return INVALID_AMOUNT;
 }
 
 EN_terminalError_t isBelowMaxAmount(ST_terminalData_t *termData) {
-    if (termData->transAmount < termData->maxTransAmount) return OK;
+    if (termData->transAmount < termData->maxTransAmount) return OK_terminal;
     else return EXCEED_MAX_AMOUNT;
 }
 EN_terminalError_t setMaxAmount(ST_terminalData_t *termData) {
+    float val;
     printf("Enter Max Transaction Amount: ");
-    scanf("%f", termData->maxTransAmount);
-    if (termData->maxTransAmount > 0) return OK;
+    scanf("%f", &val);
+    termData->maxTransAmount = val;
+    if (termData->maxTransAmount > 0) return OK_terminal;
     else return INVALID_MAX_AMOUNT;
 }

@@ -16,6 +16,6 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData) {
 EN_cardError_t getCardPAN(ST_cardData_t *cardData) {
     printf("Please enter the card PAN: ");
     int panlen = inputNumericString(cardData->primaryAccountNumber, PAN_LENGTH);
-    if (cardData->cardHolderName == NULL || panlen > 19 || panlen < 16) return WRONG_NAME;
+    if (cardData->primaryAccountNumber == NULL || panlen > 19 || panlen < 16) return WRONG_PAN;
     else return OK_card;
 }

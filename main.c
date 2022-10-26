@@ -4,9 +4,9 @@ int main(void){
     /* CONFIG */
 
     ////////////
-
+    testingModule(TEST_isBelowMaxAmount);
 
     // START APPLICATION
-    appStart();
+    //appStart();
     return 0;
 }

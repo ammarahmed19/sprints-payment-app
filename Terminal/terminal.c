@@ -61,7 +61,7 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData) {
     printf("Enter Transaction Amount: ");
     scanf("%f", &val);
     termData->transAmount = val;
-    if (termData->maxTransAmount > 0) return OK_terminal;
+    if (termData->transAmount > 0.0) return OK_terminal;
     else return INVALID_AMOUNT;
 }
 
